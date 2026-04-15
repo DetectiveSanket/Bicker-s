@@ -7,6 +7,7 @@ import Footer from "../shared/footer";
 import { ErrorSharp } from "@mui/icons-material";
 import useGetCompanyById from "@/hooks/useGetSIngleComapany";
 import { useSelector } from "react-redux";
+import { COMPANY_API_END_POINT } from "@/utils/api";
 
 const CompaniesCreation = () => {
 
@@ -113,7 +114,7 @@ const CompaniesCreation = () => {
 
             // Send request to create company
             const response = await axios.post(
-                "http://localhost:8000/api/v1/company/create",
+                `${COMPANY_API_END_POINT}/create`,
                 formDataToSubmit,
                 {
                     headers: {

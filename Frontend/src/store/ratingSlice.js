@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { RATING_API_END_POINT } from '@/utils/api';
 
 // ➡️ Fetch all ratings for a product
 export const fetchRatings = createAsyncThunk(
     'rating/fetchRatings',
     async (productId, { rejectWithValue }) => {
       try {
-        const response = await axios.get(`http://localhost:8000/api/v1/rating/${productId}`);
+        const response = await axios.get(`${RATING_API_END_POINT}/${productId}`);
         return response.data.ratings;
       } catch (error) {
         return rejectWithValue(error.response.data.message);
@@ -19,7 +20,7 @@ export const fetchAverageRating = createAsyncThunk(
     'rating/fetchAverageRating',
     async (productId, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`http://localhost:8000/api/v1/rating/average/${productId}`, { withCredentials: true });
+            const response = await axios.get(`${RATING_API_END_POINT}/average/${productId}`, { withCredentials: true });
             return response.data.averageRating;
         } catch (error) {
             return rejectWithValue(error.response.data.message);
@@ -35,7 +36,7 @@ export const addRating = createAsyncThunk(
             const token = localStorage.getItem('token');
 
             const response = await axios.post(
-                `http://localhost:8000/api/v1/rating/add`,
+                `${RATING_API_END_POINT}/add`,
                 {
                     productId,
                     rating,
@@ -60,7 +61,7 @@ export const updateRating = createAsyncThunk(
     async ({ ratingId, userId, rating, comment }, { rejectWithValue }) => {
         try {
             const response = await axios.put(
-                `http://localhost:8000/api/v1/rating/update`,
+                `${RATING_API_END_POINT}/update`,
                 { ratingId, userId, rating, comment },
                 { withCredentials: true }
             );
@@ -77,7 +78,7 @@ export const deleteRating = createAsyncThunk(
     async ({ ratingId, userId }, { rejectWithValue }) => {
         try {
             const response = await axios.delete(
-                `http://localhost:8000/api/v1/rating/${ratingId}`,
+                `${RATING_API_END_POINT}/${ratingId}`,
                 { data: { userId }, withCredentials: true }
             );
 

@@ -3,6 +3,7 @@ import AdminNavbar from "../shared/AdminNavbar";
 import Footer from "../shared/footer";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { ORDER_API_END_POINT } from "@/utils/api";
 import {
   Table,
   Header,
@@ -48,7 +49,7 @@ function AdminOrder() {
     setIsLoading(true);
     try {
         console.log("Fetching orders...");
-        const response = await axios.get("http://localhost:8000/api/v1/order/shop-owner", {
+        const response = await axios.get(`${ORDER_API_END_POINT}/shop-owner`, {
         // const response = await axios.get(`${import.meta.env.URL}/order/shop-owner`, {
             withCredentials: true
         });
@@ -91,7 +92,7 @@ function AdminOrder() {
         
         try {
             const response = await axios.patch(
-                `http://localhost:8000/api/v1/order/${orderId}/status`,
+                `${ORDER_API_END_POINT}/${orderId}/status`,
                 { status: newStatus },
                 { withCredentials: true }
             );

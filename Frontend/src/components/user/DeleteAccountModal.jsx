@@ -9,6 +9,7 @@ import { setUser } from '../../store/authSlice';
 import { Trash, AlertTriangle, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
+import { USER_API_END_POINT } from '@/utils/api';
 
 const DeleteAccountModal = ({ isOpen, onClose }) => {
   const [confirmText, setConfirmText] = useState("");
@@ -74,7 +75,7 @@ const DeleteAccountModal = ({ isOpen, onClose }) => {
       // console.log("Attempting to delete user with ID:", userId);
       
       const response = await axios.delete(
-        `http://localhost:8000/api/v1/user/delete-user/${userId}`,
+        `${USER_API_END_POINT}/delete-user/${userId}`,
         {
           withCredentials: true,
           headers: {

@@ -1,0 +1,103 @@
+# Pre-Deployment Audit & Environment Variable Centralization
+
+## Summary
+
+This plan covers Task 1 (centralize all env vars) and Task 2 (full pre-deployment bug audit) for the Bickers project — a Vite/React frontend + Express/Node.js backend.
+
+---
+
+## Task 1: Environment Variable Issues Found
+
+### Backend (`Backent/index.js`)
+- **Line 30–31**: `frontendURL` is hardcoded to `'http://localhost:5173'`; the env-var version is commented out. **CORS is broken in production.**
+- **Line 35**: Duplicate `FRONTEND_URL` in `.env` (line 14 and 35 conflict).
+
+### Frontend
+- **`src/utils/api.js` line 2**: `API_BASE` hardcoded to `"http://localhost:8000"` — env var version commented out.
+- **15+ other files** directly call `http://localhost:8000/...` instead of using the central `api.js` constants.
+
+Files with raw localhost calls:
+| File | Count |
+|---|---|
+| `src/store/ratingSlice.js` | 5 |
+| `src/hooks/usePostWishlist.jsx` | 1 |
+| `src/hooks/useFetchRatting.jsx` | 1 |
+| `src/hooks/useGetAllCompanies.jsx` | 1 |
+| `src/components/admin/CompanyEdit.jsx` | 3 |
+| `src/components/admin/ProductEdit.jsx` | 3 |
+| `src/components/admin/ProductsCreation.jsx` | 1 |
+| `src/components/admin/CompaniesCreation.jsx` | 1 |
+| `src/components/admin/AdminOrder.jsx` | 2 |
+| `src/components/user/OrderDetails.jsx` | 2 |
+| `src/components/user/UpdateProfile.jsx` | 1 |
+| `src/components/user/DeleteAccountModal.jsx` | 1 |
+| `src/components/user/my-ui/Like.jsx` | 3 |
+| `src/components/shared/Signup.jsx` | 1 |
+| `src/components/Home/Bikes/Video.jsx` | 1 |
+| `src/components/Home/Bikes/bike-details.jsx` | 4 |
+| `src/components/auth/OTPVerification.jsx` | 2 |
+| `src/components/auth/ResetPassword.jsx` | 4 |
+| `src/components/auth/ForgetPassword.jsx` | 1 |
+
+---
+
+## Task 2: Bugs Found
+
+### 2a. Authentication Flow
+- ✅ `UserProtection` guards most user routes (redirects shopOwner to /admin)
+- ✅ `Protection` guards admin routes (redirects non-shopOwner to /)
+- ⚠️ **BUG**: `UserProtection` does NOT redirect unauthenticated users to `/login`. If `user` is null, it just renders children — so unauthenticated users can access all "user" routes (Home, Profile, WishList, etc.)
+- ⚠️ **BUG**: Several admin routes lack `Protection` wrapper: `/companytable`, `/admin/companies-creation`, `/admin-products/products-creation`, `/admin/companies-edit/:id`, `/admin/product-edit/:id`, and duplicate `/profile` route
+- ⚠️ **BUG**: `useEffect` in `Login` and `Signup` has missing dependency `navigate` and `user` — can cause stale closure issues
+- ✅ JWT is stored in httpOnly cookies (secure)
+- ⚠️ **BUG**: Token expiry is hardcoded to `"1d"` in `user.controller.js:171` but `JWT_EXPIRE` env var is never used
+
+### 2b. Logic & Module Correctness
+- ⚠️ **BUG**: `Backent/Middlewares/auth.js` references `jwt` and `User` but never imports them — this file would crash if called
+- ⚠️ **BUG**: `useFetchRatting.jsx` imports `setRatings` from `ratingSlice` but `ratingSlice.js` doesn't export `setRatings` — this will throw a runtime error
+- ⚠️ **BUG**: `useFetchRatting.jsx` calls `/api/v1/ratting/` (double-t typo) instead of `/api/v1/rating/`
+- ⚠️ **BUG**: `usePostWishlist.jsx` calls `dispatch(addToWishList(...))` but `addToWishList` is a Redux action imported from `store.wishlist` — should be imported from `wishListSlice`
+- ⚠️ **BUG**: `useGetAllCompanies.jsx` has no dependency array in `useEffect` — runs on every render, causing an infinite API call loop
+- ⚠️ **BUG**: `Backent/.env` has `FRONTEND_URL` defined twice (line 14 and line 35), last value wins but it's confusing
+
+### 2c. General Bugs
+- ⚠️ **BUG**: `deleteProfile` controller (user.controller.js lines 334–353) has `console.log` debug statements left in
+- ⚠️ `ratingSlice.js` line 84: `console.log(response.data)` debug statement left in
+- ✅ No hardcoded test credentials found
+- ✅ Error handling present throughout
+
+---
+
+## Changes to Make
+
+### Backend
+1. `Backent/index.js` — Use `process.env.FRONTEND_URL` for CORS (uncomment and fix)
+2. `Backent/.env` — Remove duplicate `FRONTEND_URL`, keep only production one (or use localhost for local dev)
+3. `Backent/.env.example` — Already exists and is good; minor update
+4. `Backent/Middlewares/auth.js` — Add missing `require()` for `jwt` and `User`
+
+### Frontend
+1. `Frontend/.env` — Add local fallback: `VITE_API_BASE_URL=http://localhost:8000`
+2. `Frontend/.env.example` — Update to be comprehensive
+3. `Frontend/src/utils/api.js` — Use `import.meta.env.VITE_API_BASE_URL`
+4. `Frontend/src/store/ratingSlice.js` — Replace all 5 hardcoded URLs with `RATING_API_END_POINT` from api.js
+5. `Frontend/src/hooks/useFetchRatting.jsx` — Fix URL (typo `ratting`→`rating`), fix missing import
+6. `Frontend/src/hooks/useGetAllCompanies.jsx` — Fix missing dependency array, fix URL
+7. `Frontend/src/hooks/usePostWishlist.jsx` — Fix URL, fix incorrect dispatch usage
+8. `Frontend/src/components/admin/CompanyEdit.jsx` — Replace 3 localhost URLs
+9. `Frontend/src/components/admin/ProductEdit.jsx` — Replace 3 localhost URLs
+10. `Frontend/src/components/admin/ProductsCreation.jsx` — Replace 1 localhost URL
+11. `Frontend/src/components/admin/CompaniesCreation.jsx` — Replace 1 localhost URL
+12. `Frontend/src/components/admin/AdminOrder.jsx` — Replace 2 localhost URLs
+13. `Frontend/src/components/user/OrderDetails.jsx` — Replace 2 localhost URLs
+14. `Frontend/src/components/user/UpdateProfile.jsx` — Replace 1 localhost URL
+15. `Frontend/src/components/user/DeleteAccountModal.jsx` — Replace 1 localhost URL
+16. `Frontend/src/components/user/my-ui/Like.jsx` — Replace 3 localhost URLs
+17. `Frontend/src/components/shared/Signup.jsx` — Replace 1 localhost URL
+18. `Frontend/src/components/Home/Bikes/Video.jsx` — Replace 1 localhost URL
+19. `Frontend/src/components/Home/Bikes/bike-details.jsx` — Replace 4 localhost URLs
+20. `Frontend/src/components/auth/OTPVerification.jsx` — Replace 2 localhost URLs
+21. `Frontend/src/components/auth/ResetPassword.jsx` — Replace 4 localhost URLs
+22. `Frontend/src/components/auth/ForgetPassword.jsx` — Replace 1 localhost URL
+23. `Frontend/src/components/ProtectionRoutes/UserProtection.jsx` — Add redirect for unauthenticated users to `/login`
+24. `Frontend/src/App.jsx` — Wrap unprotected admin routes with `Protection`

@@ -6,6 +6,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "sonner";
+import { Product_API_END_POINT } from "@/utils/api";
 
 function ProductsCreation() {
     const navigate = useNavigate();
@@ -169,7 +170,7 @@ const handleSubmit = async (e) => {
         });
 
         const response = await axios.post(
-            "http://localhost:8000/api/v1/product/create", 
+            `${Product_API_END_POINT}/create`, 
             formData, 
             {
                 withCredentials: true,

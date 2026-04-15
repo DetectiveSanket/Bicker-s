@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import {  setLoading } from '@/store/authSlice';
+import { USER_API_END_POINT } from '@/utils/api';
 import { toast } from 'sonner';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 
@@ -44,7 +45,7 @@ function SignUp() {
             dispatch(setLoading(true));
     
             const response = await axios.post(
-                "http://localhost:8000/api/v1/user/register",
+                `${USER_API_END_POINT}/register`,
                 input,
                 {
                     headers: {
@@ -84,7 +85,7 @@ function SignUp() {
       if (user) {
         navigate("/");
       }
-    }, []);
+    }, [user, navigate]);
 
     return (
         <>

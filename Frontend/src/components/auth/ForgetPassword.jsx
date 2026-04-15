@@ -8,6 +8,7 @@ import Navbar from '../shared/Navbar';
 import eemail from '../../assets/icons/email (1).png';
 import { motion } from "motion/react";
 import Footer from '../shared/footer';
+import { USER_API_END_POINT } from '@/utils/api';
 
 function ForgetPassword() {
     const [email, setEmail] = useState('');
@@ -27,7 +28,7 @@ function ForgetPassword() {
             
             // This will need to be connected to your backend endpoint
             // Replace with your actual API endpoint for password reset
-            const response = await axios.post('http://localhost:8000/api/v1/user/forgot-password', 
+            const response = await axios.post(`${USER_API_END_POINT}/forgot-password`, 
                 { email },
                 {
                     headers: {

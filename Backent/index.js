@@ -1,6 +1,8 @@
+const dotenv = require('dotenv');
+dotenv.config(); // Load environment variables FIRST before anything else
+
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./utils/db');
 const rateLimit = require('express-rate-limit');
@@ -18,22 +20,24 @@ const wishlistRoutes = require('./routes/wishlist.route');
 const ratingRoutes = require('./routes/rating.route');
 const likeRoutes = require('./routes/like.route');
 
-dotenv.config(); // Load environment variables
-
 //* Middleware
 app.use(express.json());
-
-
-
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cookieParser());
-const frontendURL = process.env.FRONTEND_URL || 'http://localhost:5173';
-    const corsOptions = {
-        origin: frontendURL,
-        credentials:true
-    };
 
-
+// CORS — read allowed origin from environment variable
+const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map(o => o.trim());
+const corsOptions = {
+    origin: (origin, callback) => {
+        // Allow requests with no origin (e.g. mobile apps, curl)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error(`CORS: origin ${origin} not allowed`));
+        }
+    },
+    credentials: true
+};
 app.use(cors(corsOptions)); // Enable CORS with options
 
 // Rate limiting

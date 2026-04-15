@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import Footer from "../shared/footer";
 import { setSingleCompany, removeCompany } from "../../store/companySlice";
+import { COMPANY_API_END_POINT } from "@/utils/api";
 
 function CompanyEdit() {
     const dispatch = useDispatch();
@@ -46,7 +47,7 @@ function CompanyEdit() {
             
             // If not in Redux, fetch it
             try {
-                const response = await axios.get(`http://localhost:8000/api/v1/company/${id}`, {
+                const response = await axios.get(`${COMPANY_API_END_POINT}/${id}`, {
                     withCredentials: true
                 });
                 
@@ -150,7 +151,7 @@ function CompanyEdit() {
         
         // Rest of your code remains the same
         const response = await axios.put(
-            `http://localhost:8000/api/v1/company/${id}`,
+            `${COMPANY_API_END_POINT}/${id}`,
             formDataToSend,
             {
                 withCredentials: true,
@@ -195,7 +196,7 @@ function CompanyEdit() {
         
         try {
             // Use axios correctly with withCredentials for cookie auth
-            const response = await axios.delete(`http://localhost:8000/api/v1/company/${id}`, {
+            const response = await axios.delete(`${COMPANY_API_END_POINT}/${id}`, {
                 withCredentials: true, // Use cookie authentication
                 headers: {
                     "Content-Type": "application/json"

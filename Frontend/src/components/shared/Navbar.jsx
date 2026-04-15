@@ -189,8 +189,8 @@ function Navbar() {
                             <SheetTrigger asChild>
                             <Button variant="ghost" className="relative h-8 w-12 rounded-full">
                                 <Avatar>
-                                <AvatarImage src={user.avatar} alt={user.fullname} />
-                                <AvatarFallback className="border-2 border-[#10B981]" >{user.fullname[0]}</AvatarFallback>
+                                <AvatarImage src={user.avatar} alt={user?.fullname || 'User'} />
+                                <AvatarFallback className="border-2 border-[#10B981]" >{user?.fullname?.[0] || 'U'}</AvatarFallback>
                                 </Avatar>
                             </Button>
                             </SheetTrigger>
@@ -206,12 +206,12 @@ function Navbar() {
                             <div className="mt-6 space-y-6">
                                 <div className="flex items-center gap-4">
                                 <Avatar className="h-16 w-16  border-2 border-[#10B981] rounded-full">
-                                    <AvatarImage src={user.avatar} alt={user.fullname} />
-                                    <AvatarFallback>{user.fullname[0]}</AvatarFallback>
+                                    <AvatarImage src={user.avatar} alt={user?.fullname || 'User'} />
+                                    <AvatarFallback>{user?.fullname?.[0] || 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <h3 className="font-semibold">{user.fullname}</h3>
-                                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                                    <h3 className="font-semibold">{user?.fullname || 'User'}</h3>
+                                    <p className="text-sm text-muted-foreground">{user?.email}</p>
                                 </div>
                                 </div>
                                 <div className="space-y-2">

@@ -4,6 +4,7 @@ import { Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import Navbar from '../shared/Navbar';
+import { USER_API_END_POINT } from '@/utils/api';
 
 function OTPVerification() {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -97,7 +98,7 @@ function OTPVerification() {
         try {
             setLoading(true);
             
-            const response = await axios.post('http://localhost:8000/api/v1/user/verify/verify-otp', 
+            const response = await axios.post(`${USER_API_END_POINT}/verify/verify-otp`, 
                 { email, otp: otpString },
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -129,7 +130,7 @@ function OTPVerification() {
         try {
             setResendLoading(true);
             
-            const response = await axios.post('http://localhost:8000/api/v1/user/verify/resend-otp', 
+            const response = await axios.post(`${USER_API_END_POINT}/verify/resend-otp`, 
                 { email },
                 {
                     headers: { 'Content-Type': 'application/json' },

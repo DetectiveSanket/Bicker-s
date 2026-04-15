@@ -7,8 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { toast } from 'sonner';
 import { setUser } from '../../store/authSlice';
 import axios from 'axios';
-import DeleteAccountModal from './DeleteAccountModal'; // Import DeleteAccountModal
+import DeleteAccountModal from './DeleteAccountModal';
 import { useLocation } from 'react-router-dom';
+import { USER_API_END_POINT } from '@/utils/api';
 
 const UpdateProfile = ({ onClose }) => {
   const location = useLocation();
@@ -104,7 +105,7 @@ const UpdateProfile = ({ onClose }) => {
 
         try {
             const response = await axios.post(
-                'http://localhost:8000/api/v1/user/profile/update',
+                `${USER_API_END_POINT}/profile/update`,
                 updatedUser,
                 {
                 headers: {
@@ -248,7 +249,7 @@ const UpdateProfile = ({ onClose }) => {
                         disabled={!isEditable} // Enable editing only when isEditable is true
                         className="mt-1 bg-white/5 border-emerald-500/30 text-white focus:border-emerald-500 focus:ring-emerald-500/20"
                     />
-                    {console.log(isEditable)}
+        {/* console.log removed */}
                 </div>
 
                 <div>

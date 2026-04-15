@@ -5,6 +5,7 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import Navbar from '../shared/Navbar';
 import ppassword from '../../assets/icons/pass.png';
+import { USER_API_END_POINT } from '@/utils/api';
 
 function ResetPassword() {
     const [otp, setOtp] = useState(['', '', '', '', '', '']);
@@ -110,7 +111,7 @@ function ResetPassword() {
         try {
             setLoading(true);
             
-            const response = await axios.post('http://localhost:8000/api/v1/user/verify-reset-otp', 
+            const response = await axios.post(`${USER_API_END_POINT}/verify-reset-otp`, 
                 { email, otp: otpString },
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -139,7 +140,7 @@ function ResetPassword() {
         try {
             setResendLoading(true);
             
-            const response = await axios.post('http://localhost:8000/api/v1/user/forgot-password', 
+            const response = await axios.post(`${USER_API_END_POINT}/forgot-password`, 
                 { email },
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -191,7 +192,7 @@ function ResetPassword() {
             
             // If token is in URL params, use the token-based endpoint
             if (token) {
-                response = await axios.post(`http://localhost:8000/api/v1/user/reset-password/${token}`, 
+                response = await axios.post(`${USER_API_END_POINT}/reset-password/${token}`, 
                     { newPassword: password },
                     {
                         headers: { 'Content-Type': 'application/json' },
@@ -200,7 +201,7 @@ function ResetPassword() {
                 );
             } else {
                 // Otherwise use the standard reset endpoint
-                response = await axios.post('http://localhost:8000/api/v1/user/reset-password', 
+                response = await axios.post(`${USER_API_END_POINT}/reset-password`, 
                     { 
                         resetToken,
                         newPassword: password 

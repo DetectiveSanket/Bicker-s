@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { LIKE_API_END_POINT } from '@/utils/api';
 
 // Add styling with styled-components
 const StyledWrapper = styled.div`
@@ -151,7 +152,7 @@ const Like = ({ className, productId }) => {
         
         try {
             setIsLoading(true);
-                const response = await axios.get(`http://localhost:8000/api/v1/like/count/${actualProductId}`, {
+                const response = await axios.get(`${LIKE_API_END_POINT}/count/${actualProductId}`, {
                 // counts are public; credentials not required
                 withCredentials: true
             });
@@ -191,7 +192,7 @@ const Like = ({ className, productId }) => {
             setIsLoading(true);
             const action = isLike ? 'remove' : 'like';
             
-            const response = await axios.post('http://localhost:8000/api/v1/like/toggle', 
+            const response = await axios.post(`${LIKE_API_END_POINT}/toggle`, 
                 { productId: actualProductId, type: action }, // Using 'type' instead of 'action'
                 { withCredentials: true }
             );
@@ -240,7 +241,7 @@ const Like = ({ className, productId }) => {
             setIsLoading(true);
             const action = isDislike ? 'remove' : 'dislike';
             
-            const response = await axios.post('http://localhost:8000/api/v1/like/toggle', 
+            const response = await axios.post(`${LIKE_API_END_POINT}/toggle`, 
                 { productId: actualProductId, type: action }, // Using 'type' instead of 'action'
                 { withCredentials: true }
             );

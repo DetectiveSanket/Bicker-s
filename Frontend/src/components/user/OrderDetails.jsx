@@ -6,6 +6,7 @@ import axios from "axios"
 import { toast } from "sonner"
 import { Loader2, ShoppingBag, Trash2 } from "lucide-react"
 import { format } from "date-fns"
+import { ORDER_API_END_POINT } from "@/utils/api"
 
 
 
@@ -21,7 +22,7 @@ function OrderDetails() {
         const fetchOrders = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get(`http://localhost:8000/api/v1/order/${user.id}`, {
+                const response = await axios.get(`${ORDER_API_END_POINT}/${user.id}`, {
                     withCredentials: true
                 });
                 
@@ -53,7 +54,7 @@ function OrderDetails() {
         
         try {
             setLoading(true);
-            const response = await axios.delete(`http://localhost:8000/api/v1/order/${orderId}`, {
+            const response = await axios.delete(`${ORDER_API_END_POINT}/${orderId}`, {
                 withCredentials: true
             });
             
