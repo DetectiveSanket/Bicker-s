@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import Footer from "../shared/footer";
 import { Link } from "react-router-dom";
 import { removeProduct, setSingleProduct } from "../../store/productSlice";
+import { Product_API_END_POINT } from "@/utils/api";
 
 function ProductEdit() {
     const dispatch = useDispatch();
@@ -64,7 +65,7 @@ function ProductEdit() {
                 
                 if (!product) {
                     // If not in Redux, fetch it
-                    const response = await axios.get(`http://localhost:8000/api/v1/product/${id}`, {
+                    const response = await axios.get(`${Product_API_END_POINT}/${id}`, {
                         withCredentials: true
                     });
                     
@@ -343,7 +344,7 @@ const handleDeleteExistingVideo = (index) => {
             
             // Make the update request
             const response = await axios.put(
-                `http://localhost:8000/api/v1/product/${id}`,
+                `${Product_API_END_POINT}/${id}`,
                 formData, 
                 {
                     withCredentials: true,
@@ -386,7 +387,7 @@ const handleDeleteExistingVideo = (index) => {
         try {
             // console.log(`Deleting product: ${id} from company: ${form.companyId}`);
             
-            const response = await axios.delete(`http://localhost:8000/api/v1/product/${id}/${form.companyId}`, {
+            const response = await axios.delete(`${Product_API_END_POINT}/${id}/${form.companyId}`, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json"
