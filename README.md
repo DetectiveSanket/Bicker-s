@@ -16,6 +16,11 @@
 
 </div>
 
+## 🌐 Website
+
+- https://bicker-s.vercel.app/
+- https://bicker-s-git-main-sankets-projects-be54dc4f.vercel.app/
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
@@ -98,14 +103,14 @@ The application features a dual-user system (regular users and shop owners), res
   </details>
   
   <details>
-    <summary>👨‍💼 Admin Dashboard</summary>
+    <summary>🧑‍💼 Admin Dashboard</summary>
     <img src="screenshots/admin 3.png" alt="Admin Dashboard" width="800"/>
     <img src="screenshots/admin 1.png" alt="Admin Dashboard" width="800"/>
     <img src="screenshots/admin 1.png" alt="Admin Dashboard" width="800"/>
   </details>
 </div>
 
-## 🔧 Tech Stack
+## 💻 Tech Stack
 
 ### Frontend
 - **React**: UI library
@@ -136,28 +141,28 @@ The project follows a clean, modular architecture:
 Bicker's/
 ├── Frontend/                # React frontend application
 │   ├── public/              # Static files
-│   └── src/
-│       ├── assets/          # Images, icons, etc.
-│       ├── components/      # UI components
-│       │   ├── admin/       # Admin-specific components
-│       │   ├── shared/      # Shared components (Navbar, Footer)
-│       │   ├── ui/          # UI elements (buttons, inputs)
-│       │   └── user/        # User-specific components
-│       ├── store/           # Redux store and slices
-│       ├── hooks/           # Custom React hooks
-│       ├── utils/           # Utility functions
-│       └── App.jsx          # Main application component
-│
-├── Backent/                 # Express backend API
-│   ├── controllers/         # Request handlers
-│   ├── Middlewares/         # Custom middlewares
-│   ├── models/              # Database models
-│   ├── routes/              # API routes
-│   ├── utils/               # Utility functions
-│   └── index.js             # Entry point
+│   ├── src/
+│   │   ├── assets/          # Images, icons, etc.
+│   │   ├── components/      # UI components
+│   │   │   ├── admin/       # Admin-specific components
+│   │   │   ├── shared/      # Shared components (Navbar, Footer)
+│   │   │   ├── ui/          # UI elements (buttons, inputs)
+│   │   │   └── user/        # User-specific components
+│   │   ├── store/           # Redux store and slices
+│   │   ├── hooks/           # Custom React hooks
+│   │   ├── utils/           # Utility functions
+│   │   └── App.jsx          # Main application component
+│   
+└── Backend/                 # Express backend API
+    ├── controllers/         # Request handlers
+    ├── Middlewares/         # Custom middlewares
+    ├── models/              # Database models
+    ├── routes/              # API routes
+    ├── utils/               # Utility functions
+    └── index.js             # Entry point
 ```
 
-## 🔌 Installation & Setup
+## 🔧 Installation & Setup
 
 ### Prerequisites
 
@@ -175,7 +180,7 @@ npm run dev
 
 ### Backend Setup
 
-1. Create a `.env` file in the `Backent` directory:
+1. Create a `.env` file in the `Backend` directory:
 
 ```
 PORT=8000
@@ -191,12 +196,12 @@ EMAIL_PASS=your_email_app_password
 2. Start the server:
 
 ```bash
-cd Backent
+cd Backend
 npm install
 npm run dev
 ```
 
-## 📡 API Endpoints
+## 📝 API Endpoints
 
 ### User Authentication
 - `POST /api/v1/user/register` - Register new user
