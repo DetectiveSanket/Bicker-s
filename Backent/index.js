@@ -2,7 +2,6 @@ const dotenv = require('dotenv');
 dotenv.config(); // Load environment variables FIRST before anything else
 
 const express = require('express');
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./utils/db');
 const rateLimit = require('express-rate-limit');
@@ -25,13 +24,28 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cookieParser());
 
-// CORS: allow the browser to send/receive cookies across domains.
-// Using `origin: true` reflects the request origin and avoids strict env-mismatch issues.
-const corsOptions = {
-    origin: true,
-    credentials: true
-};
-app.use(cors(corsOptions)); // Enable CORS with options
+// CORS: explicit headers to support cross-domain cookie auth (Vercel frontend -> Render backend).
+// This must allow credentials and echo the request origin (cannot be '*').
+app.use((req, res, next) => {
+    const requestOrigin = req.headers.origin;
+    const allowedOrigin = requestOrigin || process.env.FRONTEND_URL;
+
+    if (allowedOrigin) {
+        res.header('Access-Control-Allow-Origin', allowedOrigin);
+        res.header('Vary', 'Origin');
+    }
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(204); // preflight
+    }
+    next();
+});
 
 // Rate limiting
 const limiter = rateLimit({
