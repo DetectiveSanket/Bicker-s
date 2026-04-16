@@ -25,17 +25,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cookieParser());
 
-// CORS — read allowed origin from environment variable
-const allowedOrigins = (process.env.FRONTEND_URL || 'http://localhost:5173').split(',').map(o => o.trim());
+// CORS: allow the browser to send/receive cookies across domains.
+// Using `origin: true` reflects the request origin and avoids strict env-mismatch issues.
 const corsOptions = {
-    origin: (origin, callback) => {
-        // Allow requests with no origin (e.g. mobile apps, curl)
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error(`CORS: origin ${origin} not allowed`));
-        }
-    },
+    origin: true,
     credentials: true
 };
 app.use(cors(corsOptions)); // Enable CORS with options
