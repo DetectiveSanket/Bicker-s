@@ -1,5 +1,9 @@
 // Central API config — all base URLs read from environment variables.
 // For Vite: set VITE_API_BASE_URL in .env (local) or in your hosting platform (production).
+import axios from "axios";
+
+axios.defaults.withCredentials = true;
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
 
 export const USER_API_END_POINT = `${API_BASE}/api/v1/user`;

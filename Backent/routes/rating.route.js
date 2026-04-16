@@ -13,8 +13,8 @@ const authenticate = require("../Middlewares/isAuthenticated");
 const router = express.Router();
 
 router.post('/add', authenticate, addRating);
-router.get('/:productId', authenticate, getRatingsByProduct);
-router.get('/average/:productId', authenticate, getAverageRating);
+router.get('/:productId', getRatingsByProduct);
+router.get('/average/:productId', getAverageRating);
 router.put('/update', authenticate, updateRating);
 // router.delete('/delete', authenticate, deleteRating);
 router.delete('/:ratingId', authenticate, deleteRating);

@@ -187,7 +187,7 @@ exports.login = async(req, res) => {
         return res.status(200).cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000,
         }).json({
             message: `You have logged in successfully, ${user.fullname}`,
@@ -214,7 +214,7 @@ exports.logout = async (req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict'
+            sameSite: 'none'
         });
 
         // If req.user is set, return a success response with user details
@@ -471,7 +471,7 @@ exports.deleteProfile = async(req, res) => {
         res.clearCookie('token', {
             httpOnly: true,
             secure: true,
-            sameSite: 'strict'
+            sameSite: 'none'
         });
         
         console.log("User cookie cleared");
