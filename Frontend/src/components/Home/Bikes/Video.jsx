@@ -6,6 +6,7 @@ import axios from "axios"
 import { Loader2, Film, PlayCircle } from "lucide-react"
 import { motion } from "framer-motion"
 import { toast } from "sonner"
+import { Product_API_END_POINT } from "@/utils/api"
 
 function Video() {
     const { id } = useParams() // Get product ID from URL params
@@ -18,7 +19,7 @@ function Video() {
         const fetchProductWithVideos = async () => {
             try {
                 setLoading(true)
-                const response = await axios.get(`http://localhost:8000/api/v1/product/${id}`, {
+                const response = await axios.get(`${Product_API_END_POINT}/${id}`, {
                     withCredentials: true
                 })
                 

@@ -19,6 +19,7 @@ import Like from '../../user/my-ui/Like';
 import Ratting from '../../user/my-ui/Ratting';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
+import { Product_API_END_POINT, ORDER_API_END_POINT, WISHLIST_API_END_POINT } from '@/utils/api';
 import { clearSingleProduct, setLoading, setSingleProduct } from '@/store/productSlice';
 import { EventAvailable, Policy } from '@mui/icons-material';
 import { addToWishList, removeFromWishList } from '@/store/wishListSlice';
@@ -49,7 +50,7 @@ export default function BikeDetails() {
                 dispatch(setLoading(true));
 				dispatch(clearSingleProduct());
 
-				const response = await axios.get(`http://localhost:8000/api/v1/product/${productId}`, {
+				const response = await axios.get(`${Product_API_END_POINT}/${productId}`, {
 					withCredentials: true
 				});
 
@@ -113,7 +114,7 @@ export default function BikeDetails() {
         try {
             setIsLoading(true); // Add this state variable to your component
 
-            const response = await axios.post('http://localhost:8000/api/v1/order/', {
+            const response = await axios.post(`${ORDER_API_END_POINT}/`, {
                 name: formData.name,
                 email: formData.email,
                 phone: formData.phone,
@@ -208,7 +209,7 @@ export default function BikeDetails() {
 
         try {
             if (isFavorite) {
-                const res = await axios.delete(`http://localhost:8000/api/v1/wishlist/remove/${singleProduct._id}`, {
+                const res = await axios.delete(`${WISHLIST_API_END_POINT}/remove/${singleProduct._id}`, {
                     withCredentials: true,
                     headers: {
                         'Content-Type': 'application/json'
@@ -231,7 +232,7 @@ export default function BikeDetails() {
             } 
             
             else {
-                const res = await axios.post('http://localhost:8000/api/v1/wishlist/add', {
+                const res = await axios.post(`${WISHLIST_API_END_POINT}/add`, {
                     productId: singleProduct._id
                 }, {
                     withCredentials: true,
